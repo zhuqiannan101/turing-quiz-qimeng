@@ -82,6 +82,10 @@ h2.res{font-size:30px;text-align:center;margin-bottom:2px}
 .coingift .big{font-size:52px;line-height:1.2}
 .coingift .num{font-size:46px;font-weight:bold;color:#e65100}
 .coingift .say{font-size:18px;font-weight:bold;color:#6d4c00;margin-top:6px;line-height:1.7}
+.readbtn{border:2.5px solid #42A5F5;background:#E3F2FD;color:#1565C0;border-radius:999px;
+ padding:7px 18px;font-size:14.5px;font-weight:bold;cursor:pointer;font-family:inherit}
+.readbtn:active{transform:scale(.95)}
+.readbtn.reading{background:#42A5F5;color:#fff}
 .sndbtn{position:fixed;top:14px;left:14px;z-index:99;width:44px;height:44px;border-radius:50%;border:none;
  background:#fff;box-shadow:0 4px 14px rgba(0,0,0,.18);cursor:pointer;font-size:19px}
 .confetti{position:fixed;top:-16px;z-index:98;border-radius:3px;animation:drop linear forwards}
@@ -114,7 +118,7 @@ h2.res{font-size:30px;text-align:center;margin-bottom:2px}
 </div>
 <div id="quiz" class="hidden">
  <div class="card">
-  <div class="topbar"><span class="plate" id="pPlate"></span><span class="idx" id="pIdx"></span><div class="bar"><i id="pBar"></i><em id="pRocket">🚀</em></div></div>
+  <div class="topbar"><span class="plate" id="pPlate"></span><span class="idx" id="pIdx"></span><button class="readbtn" id="readBtn" onclick="readQ()">🔊 读题</button><div class="bar"><i id="pBar"></i><em id="pRocket">🚀</em></div></div>
   <img class="qimg" id="qImg" alt="题目">
   <div class="opts" id="opts"></div>
   <div class="fb" id="fb"></div>
@@ -157,7 +161,7 @@ h2.res{font-size:30px;text-align:center;margin-bottom:2px}
 <button class="home-ic hidden" id="homeIc" onclick="goHome()">🏠</button>
 <div class="killbanner" id="killb"></div>
 <script>
-const QUIZ=[{"plate": "方向与移动", "color": "FF7043", "ans": "A", "point": "角色方向", "q": "img/0_q.webp", "a": "img/0_a.webp"}, {"plate": "方向与移动", "color": "FF7043", "ans": "C", "point": "移动 X 步", "q": "img/1_q.webp", "a": "img/1_a.webp"}, {"plate": "方向与移动", "color": "FF7043", "ans": "D", "point": "移动 X 步", "q": "img/2_q.webp", "a": "img/2_a.webp"}, {"plate": "方向与移动", "color": "FF7043", "ans": "A", "point": "角色方向", "q": "img/3_q.webp", "a": "img/3_a.webp"}, {"plate": "方向与移动", "color": "FF7043", "ans": "C", "point": "角色运动", "q": "img/4_q.webp", "a": "img/4_a.webp"}, {"plate": "左转与右转", "color": "42A5F5", "ans": "B", "point": "左转/右转", "q": "img/5_q.webp", "a": "img/5_a.webp"}, {"plate": "左转与右转", "color": "42A5F5", "ans": "A", "point": "左转/右转", "q": "img/6_q.webp", "a": "img/6_a.webp"}, {"plate": "造型切换", "color": "AB47BC", "ans": "B", "point": "造型切换", "q": "img/7_q.webp", "a": "img/7_a.webp"}, {"plate": "造型切换", "color": "AB47BC", "ans": "A", "point": "造型切换", "q": "img/8_q.webp", "a": "img/8_a.webp"}, {"plate": "重复执行", "color": "66BB6A", "ans": "C", "point": "重复执行 X 次", "q": "img/9_q.webp", "a": "img/9_a.webp"}, {"plate": "重复执行", "color": "66BB6A", "ans": "A", "point": "重复判断", "q": "img/10_q.webp", "a": "img/10_a.webp"}, {"plate": "重复执行", "color": "66BB6A", "ans": "C", "point": "重复执行 X 次", "q": "img/11_q.webp", "a": "img/11_a.webp"}, {"plate": "坐标认读", "color": "F59E0B", "ans": "A", "point": "坐标认读", "q": "img/12_q.webp", "a": "img/12_a.webp"}, {"plate": "坐标认读", "color": "F59E0B", "ans": "A", "point": "坐标认读", "q": "img/13_q.webp", "a": "img/13_a.webp"}, {"plate": "随机与大小", "color": "14B8A6", "ans": "C", "point": "随机效果", "q": "img/14_q.webp", "a": "img/14_a.webp"}, {"plate": "随机与大小", "color": "14B8A6", "ans": "C", "point": "将大小设为/增加", "q": "img/15_q.webp", "a": "img/15_a.webp"}, {"plate": "随机与大小", "color": "14B8A6", "ans": "C", "point": "将大小设为/增加", "q": "img/16_q.webp", "a": "img/16_a.webp"}, {"plate": "播放声音", "color": "EC407A", "ans": "A", "point": "播放声音", "q": "img/17_q.webp", "a": "img/17_a.webp"}, {"plate": "条件判断", "color": "EF5350", "ans": "C", "point": "如果…那么…否则", "q": "img/18_q.webp", "a": "img/18_a.webp"}, {"plate": "条件判断", "color": "EF5350", "ans": "A", "point": "如果…那么/如果…那么否则", "q": "img/19_q.webp", "a": "img/19_a.webp"}, {"plate": "变量计算", "color": "5C6BC0", "ans": "C", "point": "简单变量计算", "q": "img/20_q.webp", "a": "img/20_a.webp"}, {"plate": "变量计算", "color": "5C6BC0", "ans": "B", "point": "复杂变量计算", "q": "img/21_q.webp", "a": "img/21_a.webp"}, {"plate": "抬笔落笔", "color": "8D6E63", "ans": "A", "point": "抬笔落笔", "q": "img/22_q.webp", "a": "img/22_a.webp"}, {"plate": "克隆", "color": "00ACC1", "ans": "D", "point": "克隆", "q": "img/23_q.webp", "a": "img/23_a.webp"}];
+const QUIZ=[{"plate": "方向与移动", "color": "FF7043", "ans": "A", "point": "角色方向", "q": "img/0_q.webp", "a": "img/0_a.webp", "read": "小蝴蝶在花园里飞来飞去。运行下面程序后，它会向哪个方向飞？A 向右飞，B 向左飞，C 向上飞，D 向下飞"}, {"plate": "方向与移动", "color": "FF7043", "ans": "C", "point": "移动 X 步", "q": "img/1_q.webp", "a": "img/1_a.webp", "read": "小汽车从家门口出发，运行下面程序后，它一共前进了多少步？A 40步，B 30步，C 70步，D 10步"}, {"plate": "方向与移动", "color": "FF7043", "ans": "D", "point": "移动 X 步", "q": "img/2_q.webp", "a": "img/2_a.webp", "read": "小青蛙要跳到池塘对面，一共需要移动100步。下面哪段程序不能帮它到达对面？A 移动99步再移动1步，B 移动50步再移动50步，C 移动30步再移动70步，D 移动10步再移动10步"}, {"plate": "方向与移动", "color": "FF7043", "ans": "A", "point": "角色方向", "q": "img/3_q.webp", "a": "img/3_a.webp", "read": "火箭要飞上太空，应该朝上飞。下列哪个选项的代码能让火箭面向上方？A 面向0方向，B 面向90方向，C 面向180方向，D 面向负90方向"}, {"plate": "方向与移动", "color": "FF7043", "ans": "C", "point": "角色运动", "q": "img/4_q.webp", "a": "img/4_a.webp", "read": "舞台区和红气球的程序如图所示，程序运行结束后，红气球的y坐标是多少？A 负100，B 负20，C 60，D 160"}, {"plate": "左转与右转", "color": "42A5F5", "ans": "B", "point": "左转/右转", "q": "img/5_q.webp", "a": "img/5_a.webp", "read": "小鸟在树枝上，当前面向90方向，运行下面程序后，它面向哪个方向？A 面向180方向，B 面向0方向，C 面向90方向，D 面向负90方向"}, {"plate": "左转与右转", "color": "42A5F5", "ans": "A", "point": "左转/右转", "q": "img/6_q.webp", "a": "img/6_a.webp", "read": "小汽车在马路上向左边开了，到了路口需要拐向下方。下列哪个选项的代码能让小汽车实现上述效果？A 右转60度，B 左转90度，C 左转180度，D 右转130度"}, {"plate": "造型切换", "color": "AB47BC", "ans": "B", "point": "造型切换", "q": "img/7_q.webp", "a": "img/7_a.webp", "read": "小猫咪在舞台上表演。运行下面程序后，它最后是什么样子？A 开心，B 睡觉，C 打哈欠，D 跳舞"}, {"plate": "造型切换", "color": "AB47BC", "ans": "A", "point": "造型切换", "q": "img/8_q.webp", "a": "img/8_a.webp", "read": "春天到了。花朵的造型页如图所示，它当前是半开造型，想要变成盛开造型。需要给花朵编写下列哪段程序来实现上述效果？A 下一个造型，再换成盛开造型；B 换成盛开造型，再下一个造型；C 下一个造型，再下一个造型；D 换成花苞造型，再下一个造型"}, {"plate": "重复执行", "color": "66BB6A", "ans": "C", "point": "重复执行 X 次", "q": "img/9_q.webp", "a": "img/9_a.webp", "read": "一阵风吹来，小风车开心地转了起来。运行下面程序，它一共右转了多少度？A 5，B 9，C 20，D 0"}, {"plate": "重复执行", "color": "66BB6A", "ans": "A", "point": "重复判断", "q": "img/10_q.webp", "a": "img/10_a.webp", "read": "小鱼在海底游，鲨鱼在后面追。运行下面程序，小鱼什么时候会说救命？A 每次碰到鲨鱼都说救命，B 只有一次碰到鲨鱼说救命，C 永远不会说救命，D 每移动20步说一次救命"}, {"plate": "重复执行", "color": "66BB6A", "ans": "C", "point": "重复执行 X 次", "q": "img/11_q.webp", "a": "img/11_a.webp", "read": "小宇航员的造型页和程序如图所示，他要在太空舱里跳舞。运行下面程序后，他会换成哪个姿势的舞蹈？A 舞蹈1，B 舞蹈2，C 舞蹈3，D 舞蹈4"}, {"plate": "坐标认读", "color": "F59E0B", "ans": "A", "point": "坐标认读", "q": "img/12_q.webp", "a": "img/12_a.webp", "read": "太阳当前的坐标是0逗120，下面哪个选项可以展示出正确的太阳位置？"}, {"plate": "坐标认读", "color": "F59E0B", "ans": "A", "point": "坐标认读", "q": "img/13_q.webp", "a": "img/13_a.webp", "read": "观察舞台区，红苹果在右上角，小刺猬想吃苹果，应该选哪个程序移到红苹果位置？A 移到x150 y120，B 移到x120 y150，C 移到x0 y0，D 移到x负150 y负120"}, {"plate": "随机与大小", "color": "14B8A6", "ans": "C", "point": "随机效果", "q": "img/14_q.webp", "a": "img/14_a.webp", "read": "动物狂欢节准备颁发大小不同的蛋糕。运行下面程序后，蛋糕的大小可能是多少？A 一定是50，B 一定是100，C 50到100之间的某个数，D 可能是120"}, {"plate": "随机与大小", "color": "14B8A6", "ans": "C", "point": "将大小设为/增加", "q": "img/15_q.webp", "a": "img/15_a.webp", "read": "气球程序运行后，气球膨胀的大小是多少？A 30，B 50，C 80，D 130"}, {"plate": "随机与大小", "color": "14B8A6", "ans": "C", "point": "将大小设为/增加", "q": "img/16_q.webp", "a": "img/16_a.webp", "read": "一颗小种子在土里发芽，运行下面程序，小苗的最大高度是多少？A 50，B 60，C 40，D 10"}, {"plate": "播放声音", "color": "EC407A", "ans": "A", "point": "播放声音", "q": "img/17_q.webp", "a": "img/17_a.webp", "read": "音乐课上，小云运行了下面程序，你会先听到什么声音？A 先听到fa，再听到mi，B 先听到mi，再听到fa，C 两个声音一起响，D 只能听到mi"}, {"plate": "条件判断", "color": "EF5350", "ans": "C", "point": "如果…那么…否则", "q": "img/18_q.webp", "a": "img/18_a.webp", "read": "小兔子出门前看了看窗外。运行下面程序，小兔子会怎么说？A 说带伞，B 什么也不说，C 说不带，D 说雨伞"}, {"plate": "条件判断", "color": "EF5350", "ans": "A", "point": "如果…那么/如果…那么否则", "q": "img/19_q.webp", "a": "img/19_a.webp", "read": "想让电扇在温度超过30度时说好热呀，不超过时说好凉快，应该给它编写下列哪组程序来实现上述效果？"}, {"plate": "变量计算", "color": "5C6BC0", "ans": "C", "point": "简单变量计算", "q": "img/20_q.webp", "a": "img/20_a.webp", "read": "运行下面程序后，变量糖的最后值是多少？A 12，B 26，C 11，D 25"}, {"plate": "变量计算", "color": "5C6BC0", "ans": "B", "point": "复杂变量计算", "q": "img/21_q.webp", "a": "img/21_a.webp", "read": "水果篮里放了一些苹果和橘子，数量变化如下图程序。运行程序后，苹果和橘子最终各有多少个？A 苹果有3个、橘子有5个，B 苹果有5个、橘子有6个，C 苹果有5个、橘子有3个，D 苹果有2个、橘子有1个"}, {"plate": "抬笔落笔", "color": "8D6E63", "ans": "A", "point": "抬笔落笔", "q": "img/22_q.webp", "a": "img/22_a.webp", "read": "小画家绘制笔画笔写了如下程序。程序运行结束后，舞台上会画出一条多长的线？A 一条长度为60的线，B 一条长度为100的线，C 一条长度为40的线，D 什么线都没有"}, {"plate": "克隆", "color": "00ACC1", "ans": "D", "point": "克隆", "q": "img/23_q.webp", "a": "img/23_a.webp", "read": "运行下面程序，舞台上一共能看到几个魔法师？A 5个，B 1个，C 2个，D 3个"}];
 const KEY="quiz_qm_v1";
 const PRAISE=["太棒啦！🌟","真聪明！🧠","哇，答对啦！🎉","厉害厉害！👍","你就是小天才！✨","稳稳拿下！💪"];
 const CHEER=["没关系，看完解析你就会啦！","错一题没关系，金币下次赚回来！","差一点点，看解析补补课～"];
@@ -258,7 +262,7 @@ function preload(i){if(i===null||i===undefined||i<0||i>=order.length)return;
  try{const q=QUIZ[order[i]];const im1=new Image();im1.src=q.q;const im2=new Image();im2.src=q.a}catch(e){}}
 function show(ids){for(const id of["home","quiz","ans","result"])document.getElementById(id).classList.toggle("hidden",!ids.includes(id));
  document.getElementById("homeIc").classList.toggle("hidden",!ids.some(i=>i!=="home"))}
-function goHome(){show(["home"]);renderProg()}
+function goHome(){stopSpeak();show(["home"]);renderProg()}
 function render(){
  const q=QUIZ[order[cur]];
  document.getElementById("pPlate").textContent=q.plate;
@@ -312,6 +316,7 @@ function showAns(){
  show(["ans"]);
 }
 function next(){
+ stopSpeak();
  cur++;
  if(cur>=order.length){result();return}
  if(document.getElementById("quiz").classList.contains("hidden"))show(["quiz"]);
@@ -351,5 +356,27 @@ function renderProg(){
    <div style="flex:1;min-width:150px">✅ 已掌握：<b style="color:#3cb371">${total-w}</b> 题</div>
   </div>`;
 }
+
+// ---------- 读题(TTS) ----------
+let voices=[];
+function loadVoices(){voices=speechSynthesis.getVoices()}
+if(typeof speechSynthesis!=="undefined"){loadVoices();speechSynthesis.onvoiceschanged=loadVoices}
+function stopSpeak(){if(typeof speechSynthesis!=="undefined")speechSynthesis.cancel();
+ const b=document.getElementById("readBtn");if(b)b.classList.remove("reading")}
+function readQ(){
+ const q=QUIZ[order[cur]];
+ if(!q.read)return;
+ const b=document.getElementById("readBtn");
+ if(b.classList.contains("reading")){stopSpeak();return}
+ speechSynthesis.cancel();
+ const u=new SpeechSynthesisUtterance("第"+(cur+1)+"题。"+q.read);
+ u.lang="zh-CN";u.rate=0.9;u.pitch=1.1;
+ const v=voices.find(v=>(v.lang||"").toLowerCase().indexOf("zh")===0);
+ if(v)u.voice=v;
+ u.onend=()=>b.classList.remove("reading");
+ b.classList.add("reading");
+ speechSynthesis.speak(u);
+}
+
 renderProg();renderName();
 </script></body></html>
